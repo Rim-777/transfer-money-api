@@ -13,7 +13,7 @@ RSpec.describe Users::Sessions::New do
 
     let(:params) do
       {
-        email: 'valid@email.test',
+        email: user.email,
         password: 'valid-password'
       }
     end

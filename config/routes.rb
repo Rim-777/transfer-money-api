@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   api vendor_string: 'transfer-money-api', default_version: 1 do
     version 1 do
       cache as: 'v1' do
+        resources :sessions, only: [:create]
       end
     end
   end
