@@ -33,3 +33,6 @@
 
 # Ignore database local setup
 /config/database.yml
+
+# Ignore .env file
+/.env

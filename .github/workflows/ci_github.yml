@@ -2,6 +2,8 @@ name: CI
 
 on: [push, pull_request]
 
+env:
+  JWT_KEY: "-----BEGIN EC PRIVATE KEY-----\nMIGkAgEBBDC3cOsI+y+kv+Gcjq5+RlAlzPbOJHovYdwizVx+bh3kxIdD5h9EVLtX\nLxCZThSkAb6gBwYFK4EEACKhZANiAARzp/WjdacISVAbbeEpMw2lUNiX8/QtCr14\nmS2dcVTI8HVF8G4MmJFs9oxn97WIEBhjUWrIms0VrhpPsRc2hw1re6Rg8UKLzbqE\nLKB8hJPuT6bFLBfoLJo0NfxoVyWdlLI=\n-----END EC PRIVATE KEY-----\n"
 jobs:
   build:
     runs-on: ubuntu-latest
