@@ -7,3 +7,7 @@ Dry::Validation.register_macro(:format) do |macro:|
   end
 end
 
+module Types
+  include Dry.Types()
+end
+

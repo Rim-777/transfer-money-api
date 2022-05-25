@@ -104,31 +104,7 @@ RSpec.describe Api::V1::SessionsController, type: :request do
       context '400' do
         let(:expected_http_code) { '400' }
 
-        context 'missing root key' do
-          before do
-            params.delete(:data)
-            request
-          end
-
-          let(:expected_response_body) do
-            { errors: [{ detail: { data: ['is missing'] } }] }
-          end
-
-          include_examples :failure
-        end
-
-        context 'missing data/attributes key' do
-          before do
-            params[:data].delete(:attributes)
-            request
-          end
-
-          let(:expected_response_body) do
-            { errors: [{ detail: { data: { attributes: ['is missing'] } } }] }
-          end
-
-          include_examples :failure
-        end
+        it_behaves_like 'api/missing_root_keys'
 
         context 'data/attributes/email key' do
           context 'missing' do

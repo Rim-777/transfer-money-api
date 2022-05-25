@@ -4,7 +4,9 @@ module Users
   module Sessions
     class New
       prepend BaseOperation
-      EXPIRATION = 600
+      include JwtConfig
+
+      option :expiration, type: Dry::Types['strict.integer'], default: -> { 600 }
       option :email, type: Dry::Types['strict.string']
       option :password, type: Dry::Types['strict.string']
       option :issuer, default: -> { 'Transfer Money Api' }, type: Dry::Types['strict.string']
@@ -24,12 +26,11 @@ module Users
           return if @user&.valid_password?(@password)
         end
 
-        interrupt_with_errors! [I18n.t(:invalid_email_or_password, scope: 'api.errors')]
+        interrupt_with_errors! [I18n.t(:invalid_email_or_password, scope: 'errors')]
       end
 
       def create_jwt!
-        key = ENV.fetch('JWT_KEY')
-        @jwt = JWT.encode(options, OpenSSL::PKey::EC.new(key), 'ES384')
+        @jwt = JWT.encode(options, ecdsa_key!, JWT_ALGORITHM)
       end
 
       def options
@@ -39,7 +40,7 @@ module Users
           sub: @user.id,
           email: @email,
           iat: iat,
-          exp: (iat + EXPIRATION)
+          exp: (iat + @expiration)
         }
       end
     end

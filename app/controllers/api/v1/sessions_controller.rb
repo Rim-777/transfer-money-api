@@ -28,12 +28,7 @@ module Api
 
       def validate_params
         validation = Sessions::CreateContract.new.call(auth_params)
-        if validation.success?
-          @valid_params = validation.to_h
-        else
-          message = validation.errors.to_h
-          error_response(message, :bad_request)
-        end
+        result_validation(validation)
       end
     end
   end
