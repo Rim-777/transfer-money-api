@@ -61,8 +61,14 @@ RSpec.describe Api::V1::Accounts::TransactionsController, type: :request do
     context 'success' do
       before { request }
 
+      let(:json_schema) { TransactionSchema.call }
+
       it 'returns an expected http code' do
         expect(response.code).to eq('201')
+      end
+
+      it 'matches schema' do
+        expect { JSON::Validator.validate!(json_schema, response_body) }.not_to raise_error
       end
 
       it 'returns an expected relationships' do
