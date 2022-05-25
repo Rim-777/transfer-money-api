@@ -6,7 +6,7 @@ module Users
       prepend BaseOperation
       include JwtConfig
 
-      EXPIRATION = 600
+      option :expiration, type: Dry::Types['strict.integer'], default: -> { 600 }
       option :email, type: Dry::Types['strict.string']
       option :password, type: Dry::Types['strict.string']
       option :issuer, default: -> { 'Transfer Money Api' }, type: Dry::Types['strict.string']
@@ -40,7 +40,7 @@ module Users
           sub: @user.id,
           email: @email,
           iat: iat,
-          exp: (iat + EXPIRATION)
+          exp: (iat + @expiration)
         }
       end
     end

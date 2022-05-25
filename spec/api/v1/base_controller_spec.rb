@@ -17,17 +17,19 @@ RSpec.describe Api::V1::BaseController, type: :controller do
 
     let(:password) { 'valid-password' }
     let!(:user) { create(:user, password: password) }
+    let(:expiration) { 600 }
+
+    let(:bearer_token) do
+      jwt = Users::Sessions::New.call(
+        email: user.email,
+        password: password,
+        expiration: expiration
+      ).jwt
+
+      "Bearer #{jwt}"
+    end
 
     context 'success' do
-      let(:bearer_token) do
-        jwt = Users::Sessions::New.call(
-          email: user.email,
-          password: password
-        ).jwt
-
-        "Bearer #{jwt}"
-      end
-
       before do
         request.headers.merge!('Authorization' => bearer_token)
         get :index
@@ -61,13 +63,13 @@ RSpec.describe Api::V1::BaseController, type: :controller do
         end
 
         it 'responds with expected response body' do
-          expect(response.body).to eq(response_body)
+          expect(response_body).to eq(expected_response_body)
         end
       end
 
       context 'invalid authorisation' do
-        let(:response_body) do
-          '{"errors":[{"detail":"Invalid authorisation"}]}'
+        let(:expected_response_body) do
+          { errors: [{ detail: 'Invalid authorisation' }] }
         end
 
         context 'missing authorisation header' do
@@ -95,6 +97,21 @@ RSpec.describe Api::V1::BaseController, type: :controller do
 
           include_examples :unauthorized
         end
+      end
+
+      context do
+        let(:expiration) { -200 }
+
+        let(:expected_response_body) do
+          { errors: [{ detail: 'Expired authorisation' }] }
+        end
+
+        before do
+          request.headers.merge!('Authorization' => bearer_token)
+          get :index
+        end
+
+        include_examples :unauthorized
       end
     end
   end
