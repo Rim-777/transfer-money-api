@@ -158,7 +158,7 @@ RSpec.describe Accounts::Transactions::Create do
       end
 
       context 'unexpected AR validation error' do
-        let(:error) {'some error'}
+        let(:error) { 'some error' }
 
         before do
           sender.errors.add(:base, error)

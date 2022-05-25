@@ -5,8 +5,11 @@ en:
     invalid_password: 'must contain at least 6 symbols'
     authorization_error: 'User is not allowed to manage the %{recourse}'
     amount_insufficiency: 'Insufficient balance'
+    negative_amount: 'cannot be negative'
     same_account_transfer: 'Sender and receiver must be different'
+    invalid_access_token: 'Invalid authorisation'
+    expired_access_token: 'Expired authorisation'
+    invalid_email_or_password: 'Invalid email or password'
   api:
     errors:
-      invalid_email_or_password: 'Invalid email or password'
       unhandled: 'Sorry, something went wrong on out side, we are already working on it'

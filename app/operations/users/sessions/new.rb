@@ -4,6 +4,8 @@ module Users
   module Sessions
     class New
       prepend BaseOperation
+      include JwtConfig
+
       EXPIRATION = 600
       option :email, type: Dry::Types['strict.string']
       option :password, type: Dry::Types['strict.string']
@@ -24,12 +26,11 @@ module Users
           return if @user&.valid_password?(@password)
         end
 
-        interrupt_with_errors! [I18n.t(:invalid_email_or_password, scope: 'api.errors')]
+        interrupt_with_errors! [I18n.t(:invalid_email_or_password, scope: 'errors')]
       end
 
       def create_jwt!
-        key = ENV.fetch('JWT_KEY')
-        @jwt = JWT.encode(options, OpenSSL::PKey::EC.new(key), 'ES384')
+        @jwt = JWT.encode(options, ecdsa_key!, JWT_ALGORITHM)
       end
 
       def options

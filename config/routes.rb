@@ -4,6 +4,10 @@ Rails.application.routes.draw do
     version 1 do
       cache as: 'v1' do
         resources :sessions, only: [:create]
+        namespace :accounts do
+          resources :transactions, only: [:create]
+        end
+
       end
     end
   end

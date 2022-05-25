@@ -14,7 +14,7 @@ module Accounts
       def call
         ActiveRecord::Base.transaction do
           ActiveRecord::Base.connection.execute(<<~SQL).clear
-          lock account_transactions in share row exclusive mode;
+            lock account_transactions in share row exclusive mode;
           SQL
           set_accounts!
           authorize_user
@@ -37,12 +37,14 @@ module Accounts
 
       def authorize_user
         return if @user == @sender.user
+
         message = I18n.t(:authorization_error, scope: 'errors', recourse: 'account')
         interrupt_with_errors!([message])
       end
 
       def check_account_identity
         return unless @sender == @receiver
+
         message = I18n.t(:same_account_transfer, scope: 'errors')
         interrupt_with_errors!([message])
       end
@@ -58,6 +60,7 @@ module Accounts
 
       def check_sufficiency!
         return if @sender.balance >= @amount
+
         message = I18n.t(:amount_insufficiency, scope: 'errors')
         interrupt_with_errors!([message])
       end

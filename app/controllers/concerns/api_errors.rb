@@ -4,7 +4,7 @@ module ApiErrors
   extend ActiveSupport::Concern
 
   included do
-    rescue_from(StandardError) { |e| handle_unexpected_exception(e) }
+    # rescue_from(StandardError) { |e| handle_unexpected_exception(e) }
   end
 
   private

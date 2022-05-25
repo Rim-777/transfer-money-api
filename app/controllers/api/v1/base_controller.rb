@@ -5,6 +5,9 @@ module Api
     class BaseController < ApplicationController
       include ApiErrors
       include PaginationLinks
+      include ApiValidations
+
+      attr_reader :current_user
     end
   end
 end
