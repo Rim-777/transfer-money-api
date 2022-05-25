@@ -13,7 +13,7 @@ gem 'fast_jsonapi', '~> 1.1', '>= 1.1.1'
 gem 'json-schema'
 gem 'kaminari', '~> 0.16.3'
 gem 'sorcery'
-
+gem 'state_machines-activerecord'
 gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 gem "bootsnap", require: false
 

@@ -1,0 +1,3 @@
+module Accounts
+
+end

@@ -3,6 +3,9 @@ en:
     record_invalid: '%{entity}: %{messages}'
     invalid_format: 'invalid format'
     invalid_password: 'must contain at least 6 symbols'
+    authorization_error: 'User is not allowed to manage the %{recourse}'
+    amount_insufficiency: 'Insufficient balance'
+    same_account_transfer: 'Sender and receiver must be different'
   api:
     errors:
       invalid_email_or_password: 'Invalid email or password'

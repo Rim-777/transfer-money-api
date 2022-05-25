@@ -262,6 +262,13 @@ GEM
       oauth (~> 0.5, >= 0.5.5)
       oauth2 (~> 1.0, >= 0.8.0)
     spring (4.0.0)
+    state_machines (0.5.0)
+    state_machines-activemodel (0.8.0)
+      activemodel (>= 5.1)
+      state_machines (>= 0.5.0)
+    state_machines-activerecord (0.8.0)
+      activerecord (>= 5.1)
+      state_machines-activemodel (>= 0.8.0)
     strscan (3.0.3)
     thor (1.2.1)
     timeout (0.2.0)
@@ -294,6 +301,7 @@ DEPENDENCIES
   shoulda-matchers (~> 5.1)
   sorcery
   spring
+  state_machines-activerecord
   tzinfo-data
 
 RUBY VERSION
