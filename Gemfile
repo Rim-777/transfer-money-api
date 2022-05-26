@@ -16,6 +16,7 @@ gem 'sorcery'
 gem 'state_machines-activerecord'
 gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 gem "bootsnap", require: false
+gem 'sentry-raven'
 
 group :development, :test do
   gem 'dotenv-rails'

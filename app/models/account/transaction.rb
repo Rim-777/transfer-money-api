@@ -11,9 +11,9 @@ class Account::Transaction < ApplicationRecord
              foreign_key: :receiver_id,
              inverse_of: :received_transactions
 
-  validates :amount, numericality: { greater_than_or_equal_to:  0 }
+  validates :amount, numericality: { greater_than_or_equal_to: 0 }
 
-  state_machine :status, :initial => :processing do
+  state_machine :status, initial: :processing do
     event :complete do
       transition all => :completed
     end

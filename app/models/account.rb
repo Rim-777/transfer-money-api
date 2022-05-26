@@ -12,5 +12,5 @@ class Account < ApplicationRecord
            inverse_of: :receiver,
            foreign_key: :receiver_id
 
-  validates :balance, numericality: { greater_than_or_equal_to:  0 }
+  validates :balance, numericality: { greater_than_or_equal_to: 0 }
 end

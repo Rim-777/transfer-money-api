@@ -1,24 +1,57 @@
-# README
+## Transfer Money Api
+Ruby-on-Rails [JSON:API](https://jsonapi.org/) application with ActiveRecord, Dry-rb, RSpec
+### Dependencies:
+- Ruby 2.7.6
+- PostgreSQL
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+### Installation:
+- Clone poject
+- Run bundler:
 
-Things you may want to cover:
+ ```shell
+ $ bundle install
+ ```
+- Copy database.yml:
+```shell
+$ cp config/database.yml.sample config/database.yml
+```
 
-* Ruby version
+- Create and migrate database:
 
-* System dependencies
+```shell
+ $ bundle exec rails db:create
+ $ bundle exec rails db:migrate
+```
 
-* Configuration
+- Populate the database:
 
-* Database creation
+```shell
+ $ bundle exec rails db:seed
+```
 
-* Database initialization
+- Run application:
 
-* How to run the test suite
+ ```shell
+ $ rails server
+ ```
 
-* Services (job queues, cache servers, search engines, etc.)
+##### Tests:
+To execute tests, run following commands:
 
-* Deployment instructions
+```shell
+ $ bundle exec rake db:migrate RAILS_ENV=test #(the first time only)
+ $ bundle exec rspec
+```
 
-* ...
+### Explanation of the approach:
+DDD Service-based app design with step-based operations
+
+#### Common logic:
+The light edition that allows users to transfer money to their accounts.
+
+Detailed documentation on [SwaggerHub](https://app.swaggerhub.com/apis-docs/Rim-777/Easy-Money-Transfer-API/1.0.0)
+
+
+### License
+
+The software is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
