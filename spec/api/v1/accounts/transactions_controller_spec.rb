@@ -139,16 +139,6 @@ RSpec.describe Api::V1::Accounts::TransactionsController, type: :request do
     end
 
     context 'failure' do
-      shared_examples :failure do
-        it 'returns an expected http code' do
-          expect(response.code).to eq(expected_http_code)
-        end
-
-        it 'returns an expected response body' do
-          expect(response_body).to eq(expected_response_body)
-        end
-      end
-
       context '401 unauthorized user' do
         before do
           headers['Authorization'] = 'some invalid token'
@@ -160,28 +150,11 @@ RSpec.describe Api::V1::Accounts::TransactionsController, type: :request do
           { errors: [{ detail: 'Invalid authorisation' }] }
         end
 
-        include_examples :failure
+        it_behaves_like 'api/common_response_matching'
       end
 
       context '400 invalid params' do
         let(:expected_http_code) { '400' }
-
-        def error_base(key, message)
-          {
-            errors: [
-              {
-                detail:
-                  {
-                    data: {
-                      attributes: {
-                        key => [message]
-                      }
-                    }
-                  }
-              }
-            ]
-          }
-        end
 
         it_behaves_like 'api/missing_root_keys'
 
@@ -194,10 +167,10 @@ RSpec.describe Api::V1::Accounts::TransactionsController, type: :request do
             end
 
             let(:expected_response_body) do
-              error_base(key, 'is missing')
+              ApiMacros.code_400_message_base(key, 'is missing')
             end
 
-            include_examples :failure
+            it_behaves_like 'api/common_response_matching'
           end
 
           context 'invalid value' do
@@ -207,10 +180,10 @@ RSpec.describe Api::V1::Accounts::TransactionsController, type: :request do
             end
 
             let(:expected_response_body) do
-              error_base(key, 'must be an integer')
+              ApiMacros.code_400_message_base(key, 'must be an integer')
             end
 
-            include_examples :failure
+            it_behaves_like 'api/common_response_matching'
           end
         end
 
@@ -224,10 +197,10 @@ RSpec.describe Api::V1::Accounts::TransactionsController, type: :request do
             end
 
             let(:expected_response_body) do
-              error_base(key, 'is missing')
+              ApiMacros.code_400_message_base(key, 'is missing')
             end
 
-            include_examples :failure
+            it_behaves_like 'api/common_response_matching'
           end
 
           context 'invalid value' do
@@ -237,10 +210,10 @@ RSpec.describe Api::V1::Accounts::TransactionsController, type: :request do
             end
 
             let(:expected_response_body) do
-              error_base(key, 'must be an integer')
+              ApiMacros.code_400_message_base(key, 'must be an integer')
             end
 
-            include_examples :failure
+            it_behaves_like 'api/common_response_matching'
           end
         end
 
@@ -254,10 +227,10 @@ RSpec.describe Api::V1::Accounts::TransactionsController, type: :request do
             end
 
             let(:expected_response_body) do
-              error_base(key, 'is missing')
+              ApiMacros.code_400_message_base(key, 'is missing')
             end
 
-            include_examples :failure
+            it_behaves_like 'api/common_response_matching'
           end
 
           context 'invalid value' do
@@ -267,10 +240,10 @@ RSpec.describe Api::V1::Accounts::TransactionsController, type: :request do
             end
 
             let(:expected_response_body) do
-              error_base(key, 'must be a float')
+              ApiMacros.code_400_message_base(key, 'must be a float')
             end
 
-            include_examples :failure
+            it_behaves_like 'api/common_response_matching'
           end
 
           context 'negative value' do
@@ -280,10 +253,10 @@ RSpec.describe Api::V1::Accounts::TransactionsController, type: :request do
             end
 
             let(:expected_response_body) do
-              error_base(key, 'cannot be negative')
+              ApiMacros.code_400_message_base(key, 'cannot be negative')
             end
 
-            include_examples :failure
+            it_behaves_like 'api/common_response_matching'
           end
         end
       end
@@ -303,7 +276,7 @@ RSpec.describe Api::V1::Accounts::TransactionsController, type: :request do
             { errors: [{ detail: "Couldn't find Account with 'id'=#{wrong_id}" }] }
           end
 
-          include_examples :failure
+          it_behaves_like 'api/common_response_matching'
         end
 
         context 'receiver' do

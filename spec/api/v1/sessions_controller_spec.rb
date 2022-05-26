@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::SessionsController, type: :request do
   let(:response_body) { JSON.parse(response.body, symbolize_names: true) }
-
+  extend ApiMacros
   let(:headers) do
     { 'Content-Type' => 'application/json', 'Accept' => 'application/json' }
   end
@@ -41,8 +41,8 @@ RSpec.describe Api::V1::SessionsController, type: :request do
 
     context 'success' do
       let(:access_token_header) { 'X-AccessToken' }
-
       context 'integration' do
+        let(:expected_http_code) { '201' }
         let(:expected_response_body) do
           {
             data: {
@@ -58,13 +58,7 @@ RSpec.describe Api::V1::SessionsController, type: :request do
 
         before { request }
 
-        it 'returns an expected http code' do
-          expect(response.code).to eq('201')
-        end
-
-        it 'returns an expected response body' do
-          expect(response_body).to eq expected_response_body
-        end
+        it_behaves_like 'api/common_response_matching'
 
         it 'returns X-AccessToken header' do
           expect(response.headers).to include(access_token_header)
@@ -91,45 +85,25 @@ RSpec.describe Api::V1::SessionsController, type: :request do
     end
 
     context 'failure' do
-      shared_examples :failure do
-        it 'returns an expected http code' do
-          expect(response.code).to eq(expected_http_code)
-        end
-
-        it 'returns an expected response body' do
-          expect(response_body).to eq(expected_response_body)
-        end
-      end
-
       context '400' do
         let(:expected_http_code) { '400' }
 
         it_behaves_like 'api/missing_root_keys'
 
         context 'data/attributes/email key' do
+          let(:key) { :email }
+
           context 'missing' do
             before do
-              params[:data][:attributes].delete(:email)
+              params[:data][:attributes].delete(key)
               request
             end
 
             let(:expected_response_body) do
-              {
-                errors: [
-                  {
-                    detail: {
-                      data: {
-                        attributes: {
-                          email: ['is missing']
-                        }
-                      }
-                    }
-                  }
-                ]
-              }
+              ApiMacros.code_400_message_base(key, 'is missing')
             end
 
-            include_examples :failure
+            it_behaves_like 'api/common_response_matching'
           end
 
           context 'invalid_format' do
@@ -139,83 +113,45 @@ RSpec.describe Api::V1::SessionsController, type: :request do
             end
 
             let(:expected_response_body) do
-              {
-                errors: [
-                  {
-                    detail: {
-                      data: {
-                        attributes: {
-                          email: ['invalid format']
-                        }
-                      }
-                    }
-                  }
-                ]
-              }
+              ApiMacros.code_400_message_base(key, 'invalid format')
             end
 
-            include_examples :failure
+            it_behaves_like 'api/common_response_matching'
           end
         end
 
         context 'data/attributes/password key' do
+          let(:key) { :password }
           context 'missing' do
             before do
-              params[:data][:attributes].delete(:password)
+              params[:data][:attributes].delete(key)
               request
             end
 
             let(:expected_response_body) do
-              {
-                errors: [
-                  {
-                    detail: {
-                      data: {
-                        attributes: {
-                          password: ['is missing']
-                        }
-                      }
-                    }
-                  }
-                ]
-              }
+              ApiMacros.code_400_message_base(key, 'is missing')
             end
 
-            include_examples :failure
+            it_behaves_like 'api/common_response_matching'
           end
 
           context 'invalid length' do
             before do
-              params[:data][:attributes][:password] = '12345'
+              params[:data][:attributes][key] = '12345'
               request
             end
 
             let(:expected_response_body) do
-              {
-                errors: [
-                  {
-                    detail: {
-                      data: {
-                        attributes: {
-                          password: [
-                            'must contain at least 6 symbols'
-                          ]
-                        }
-                      }
-                    }
-                  }
-                ]
-              }
+              ApiMacros.code_400_message_base(key, 'must contain at least 6 symbols')
             end
 
-            include_examples :failure
+            it_behaves_like 'api/common_response_matching'
           end
         end
       end
 
       context '422' do
         let(:expected_http_code) { '422' }
-
         let(:message) { 'some error message' }
         let(:operation_double) { double(success?: false, errors: [message]) }
 
@@ -228,7 +164,7 @@ RSpec.describe Api::V1::SessionsController, type: :request do
           { errors: [{ detail: message }] }
         end
 
-        include_examples :failure
+        it_behaves_like 'api/common_response_matching'
       end
     end
   end

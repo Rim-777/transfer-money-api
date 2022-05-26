@@ -11,7 +11,7 @@ shared_examples 'api/missing_root_keys' do
       { errors: [{ detail: { data: ['is missing'] } }] }
     end
 
-    include_examples :failure
+    it_behaves_like 'api/common_response_matching'
   end
 
   context 'missing data/attributes key' do
@@ -24,6 +24,6 @@ shared_examples 'api/missing_root_keys' do
       { errors: [{ detail: { data: { attributes: ['is missing'] } } }] }
     end
 
-    include_examples :failure
+    it_behaves_like 'api/common_response_matching'
   end
 end
