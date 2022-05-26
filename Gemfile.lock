@@ -255,6 +255,8 @@ GEM
       parser (>= 3.1.1.0)
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
+    sentry-raven (3.1.2)
+      faraday (>= 1.0)
     shoulda-matchers (5.1.0)
       activesupport (>= 5.2.0)
     sorcery (0.16.3)
@@ -298,6 +300,7 @@ DEPENDENCIES
   rails (~> 7.0.2, >= 7.0.2.3)
   rspec-rails (~> 4.0)
   rubocop
+  sentry-raven
   shoulda-matchers (~> 5.1)
   sorcery
   spring
