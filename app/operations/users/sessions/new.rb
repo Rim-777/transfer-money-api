@@ -30,7 +30,7 @@ module Users
       end
 
       def create_jwt!
-        @jwt = JWT.encode(options, ecdsa_key!, JWT_ALGORITHM)
+        @jwt = JWT.encode(options, ecdsa_key!, jwt_algorithm)
       end
 
       def options

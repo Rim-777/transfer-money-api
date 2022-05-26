@@ -2,9 +2,12 @@
 
 module JwtConfig
   extend ActiveSupport::Concern
-  JWT_ALGORITHM = 'ES384'
 
   included do
+    def jwt_algorithm
+      'ES384'
+    end
+
     def ecdsa_key!
       key = ENV.fetch('JWT_KEY')
       OpenSSL::PKey::EC.new(key)
