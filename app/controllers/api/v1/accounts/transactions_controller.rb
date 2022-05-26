@@ -30,12 +30,12 @@ module Api
 
         private
 
-        def auth_params
+        def hash_params
           params.permit(data: {}).to_h
         end
 
         def validate_params
-          validation = ::Accounts::Transactions::CreateContract.new.call(auth_params)
+          validation = ::Accounts::Transactions::CreateContract.new.call(hash_params)
           result_validation(validation)
         end
       end

@@ -287,6 +287,35 @@ RSpec.describe Api::V1::Accounts::TransactionsController, type: :request do
           end
         end
       end
+
+      context '404 resource not found' do
+        let(:expected_http_code) { '404' }
+
+        shared_examples :not_found do
+          let(:wrong_id) { 79_762_349_762_346 }
+
+          before do
+            params[:data][:attributes][resource_id] = wrong_id
+            request
+          end
+
+          let(:expected_response_body) do
+            { errors: [{ detail: "Couldn't find Account with 'id'=#{wrong_id}" }] }
+          end
+
+          include_examples :failure
+        end
+
+        context 'receiver' do
+          let(:resource_id) { :receiver_id }
+          include_examples :not_found
+        end
+
+        context 'sender' do
+          let(:resource_id) { :sender_id }
+          include_examples :not_found
+        end
+      end
     end
   end
 end
