@@ -15,16 +15,6 @@ RSpec.describe Api::V1::BaseController, type: :controller do
       end
     end
 
-    shared_examples :common do
-      it 'responds with an expected http code' do
-        expect(response.status).to eq(expected_http_code)
-      end
-
-      it 'responds with an expected response body' do
-        expect(response_body).to eq(expected_response_body)
-      end
-    end
-
     let(:password) { 'valid-password' }
     let!(:user) { create(:user, password: password) }
     let(:expiration) { 600 }
@@ -45,7 +35,7 @@ RSpec.describe Api::V1::BaseController, type: :controller do
         get :index
       end
 
-      let(:expected_http_code) { 200 }
+      let(:expected_http_code) { '200' }
 
       let(:expected_response_body) do
         {
@@ -60,12 +50,12 @@ RSpec.describe Api::V1::BaseController, type: :controller do
         }
       end
 
-      include_examples :common
+      it_behaves_like 'api/common_response_matching'
     end
 
     context 'failure' do
       context 'unauthorized' do
-        let(:expected_http_code) { 401 }
+        let(:expected_http_code) { '401' }
 
         context 'invalid authorisation' do
           let(:expected_response_body) do
@@ -77,7 +67,7 @@ RSpec.describe Api::V1::BaseController, type: :controller do
               get :index
             end
 
-            include_examples :common
+            it_behaves_like 'api/common_response_matching'
           end
 
           context 'null authorisation header value' do
@@ -86,7 +76,7 @@ RSpec.describe Api::V1::BaseController, type: :controller do
               get :index
             end
 
-            include_examples :common
+            it_behaves_like 'api/common_response_matching'
           end
 
           context 'invalid authorisation header value' do
@@ -95,7 +85,7 @@ RSpec.describe Api::V1::BaseController, type: :controller do
               get :index
             end
 
-            include_examples :common
+            it_behaves_like 'api/common_response_matching'
           end
         end
 
@@ -111,7 +101,7 @@ RSpec.describe Api::V1::BaseController, type: :controller do
             get :index
           end
 
-          include_examples :common
+          it_behaves_like 'api/common_response_matching'
         end
       end
     end
