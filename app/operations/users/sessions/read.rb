@@ -7,7 +7,7 @@ module Users
       include JwtConfig
       include RegExp
 
-      option :token
+      option :token, type: Dry::Types['strict.string']
       attr_reader :user
 
       def call
@@ -25,8 +25,9 @@ module Users
       end
 
       def decode!
-        options = { verify_expiration: true, algorithm: JWT_ALGORITHM }
-        @decoded_jwt = JWT.decode(@token.split(' ').last, ecdsa_key!, true, options)
+        options = { verify_expiration: true, algorithm: jwt_algorithm }
+        encoded_jwt = @token.split(' ').last
+        @decoded_jwt = JWT.decode(encoded_jwt, ecdsa_key!, true, options)
       rescue JWT::ExpiredSignature
         interrupt_with_errors!([I18n.t(:expired_access_token, scope: 'errors')])
       rescue JWT::DecodeError

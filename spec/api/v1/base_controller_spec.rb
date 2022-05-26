@@ -15,6 +15,16 @@ RSpec.describe Api::V1::BaseController, type: :controller do
       end
     end
 
+    shared_examples :common do
+      it 'responds with an expected http code' do
+        expect(response.status).to eq(expected_http_code)
+      end
+
+      it 'responds with an expected response body' do
+        expect(response_body).to eq(expected_response_body)
+      end
+    end
+
     let(:password) { 'valid-password' }
     let!(:user) { create(:user, password: password) }
     let(:expiration) { 600 }
@@ -35,6 +45,8 @@ RSpec.describe Api::V1::BaseController, type: :controller do
         get :index
       end
 
+      let(:expected_http_code) { 200 }
+
       let(:expected_response_body) do
         {
           data: {
@@ -47,71 +59,60 @@ RSpec.describe Api::V1::BaseController, type: :controller do
           }
         }
       end
-      it 'looks like success' do
-        expect(response.status).to eq(200)
-      end
 
-      it 'responds with current user data' do
-        expect(response_body).to eq(expected_response_body)
-      end
+      include_examples :common
     end
 
     context 'failure' do
-      shared_examples :unauthorized do
-        it 'looks like unauthorised' do
-          expect(response.status).to eq(401)
+      context 'unauthorized' do
+        let(:expected_http_code) { 401 }
+
+        context 'invalid authorisation' do
+          let(:expected_response_body) do
+            { errors: [{ detail: 'Invalid authorisation' }] }
+          end
+
+          context 'missing authorisation header' do
+            before do
+              get :index
+            end
+
+            include_examples :common
+          end
+
+          context 'null authorisation header value' do
+            before do
+              request.headers.merge!('Authorization' => nil)
+              get :index
+            end
+
+            include_examples :common
+          end
+
+          context 'invalid authorisation header value' do
+            before do
+              request.headers.merge!('Authorization' => 'Bearer eyJhbGciOiJFUzM4NCJ9')
+              get :index
+            end
+
+            include_examples :common
+          end
         end
 
-        it 'responds with expected response body' do
-          expect(response_body).to eq(expected_response_body)
-        end
-      end
+        context 'expired authorisation' do
+          let(:expiration) { -200 }
 
-      context 'invalid authorisation' do
-        let(:expected_response_body) do
-          { errors: [{ detail: 'Invalid authorisation' }] }
-        end
+          let(:expected_response_body) do
+            { errors: [{ detail: 'Expired authorisation' }] }
+          end
 
-        context 'missing authorisation header' do
           before do
+            request.headers.merge!('Authorization' => bearer_token)
             get :index
           end
 
-          include_examples :unauthorized
+          include_examples :common
         end
-
-        context 'null authorisation header value' do
-          before do
-            request.headers.merge!('Authorization' => nil)
-            get :index
-          end
-
-          include_examples :unauthorized
-        end
-
-        context 'invalid authorisation header value' do
-          before do
-            request.headers.merge!('Authorization' => 'Bearer eyJhbGciOiJFUzM4NCJ9')
-            get :index
-          end
-
-          include_examples :unauthorized
-        end
-      end
-
-      context do
-        let(:expiration) { -200 }
-
-        let(:expected_response_body) do
-          { errors: [{ detail: 'Expired authorisation' }] }
-        end
-
-        before do
-          request.headers.merge!('Authorization' => bearer_token)
-          get :index
-        end
-
-        include_examples :unauthorized
       end
     end
   end
