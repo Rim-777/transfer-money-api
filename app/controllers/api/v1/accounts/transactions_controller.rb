@@ -3,7 +3,6 @@ module Api
     module Accounts
       class TransactionsController < BaseController
         include JwtAuthentication
-        include ApiValidations
 
         before_action :validate_params, only: :create
 
